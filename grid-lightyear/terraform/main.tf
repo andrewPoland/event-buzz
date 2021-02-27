@@ -1,7 +1,9 @@
 variable "functionapp" {
     type = string
-    default = "../src/ElmStreet/bin/Release/netcoreapp3.1/publish.zip"
+    default = "../src/ElmStreet/bin/Release/netcoreapp3.1/publish.zip"    
 }
+
+
 
 # Configure the Azure provider
 terraform {
@@ -100,7 +102,7 @@ resource "azurerm_storage_container" "deployments" {
 }
 
 resource "azurerm_storage_blob" "appcode" { 
-  name = "grid-elm-street.zip"
+  name = "${base64encode(filesha256(var.functionapp))}.zip"
   storage_account_name = azurerm_storage_account.infinity.name
   storage_container_name = azurerm_storage_container.deployments.name
   type = "Block"
@@ -149,6 +151,8 @@ resource "azurerm_function_app" "elm-street" {
     SCALE_CONTROLLER_LOGGING_ENABLED = "AppInsights:verbose"
     HASH = base64encode(filesha256(var.functionapp))
     WEBSITE_RUN_FROM_PACKAGE = "${azurerm_storage_blob.appcode.url}${data.azurerm_storage_account_sas.sas.sas}"
+    MyEventGridTopicUriSetting = azurerm_eventgrid_domain.grid.endpoint
+    MyEventGridTopicKeySetting = azurerm_eventgrid_domain.grid.primary_access_key
   }
 }
 

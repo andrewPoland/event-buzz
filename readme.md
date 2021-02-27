@@ -26,7 +26,10 @@
 
 # Getting started
 
-
+```
+    dotnet publish
+    Compress-Archive -path .\bin\Release\netcoreapp3.1\publish\* -DestinatiouPath .\bin\Release\netcoreapp3.1\publish.zip
+```
 
 # Resources
 

@@ -1,0 +1,2 @@
+dotnet publish "$PSScriptRoot\ElmStreet.csproj" -c Release
+Compress-Archive -path "$PSScriptRoot\bin\Release\netcoreapp3.1\publish\*" -DestinationPath "$PSScriptRoot\bin\Release\netcoreapp3.1\publish.zip" -Update
